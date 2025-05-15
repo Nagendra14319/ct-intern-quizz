@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Quiz App</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #e0f7fa; margin: 0; padding: 40px; text-align: center;">
+
+  <h1 style="color: #00796b; margin-bottom: 30px;">🌟 Interactive Quiz Application 🌟</h1>
+
+  <div id="quiz-container" style="background: #ffffff; padding: 30px; max-width: 700px; margin: auto; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+
+    <div id="question" style="font-size: 22px; font-weight: bold; margin-bottom: 25px; color: #004d40;"></div>
+
+    <div id="options" style="margin-bottom: 25px;"></div>
+
+    <div id="feedback" style="font-size: 18px; font-weight: bold; margin-bottom: 20px;"></div>
+
+    <button onclick="nextQuestion()" id="next-btn" style="padding: 12px 25px; font-size: 16px; background-color: #00796b; color: white; border: none; border-radius: 8px; cursor: pointer; display: none; transition: background-color 0.3s ease;">
+      Next
+    </button>
+
+    <div id="score" style="font-size: 18px; margin-top: 25px; color: #00695c;"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "What is the capital of France?",
+        options: ["Berlin", "Madrid", "Paris", "Lisbon"],
+        answer: "Paris"
+      },
+      {
+        question: "Which language is used for web apps?",
+        options: ["Python", "JavaScript", "C++", "Java"],
+        answer: "JavaScript"
+      },
+      {
+        question: "What does HTML stand for?",
+        options: [
+          "Hyper Text Markup Language",
+          "Home Tool Markup Language",
+          "Hyperlinks and Text Markup Language",
+          "Hyper Tool Multi Language"
+        ],
+        answer: "Hyper Text Markup Language"
+      },
+      {
+        question: "Which tag is used to define a hyperlink in HTML?",
+        options: ["<link>", "<a>", "<href>", "<hyper>"],
+        answer: "<a>"
+      },
+      {
+        question: "Which company developed JavaScript?",
+        options: ["Microsoft", "Apple", "Netscape", "Google"],
+        answer: "Netscape"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = questions[currentQuestionIndex];
+      document.getElementById("question").textContent = q.question;
+      document.getElementById("options").innerHTML = "";
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.style.margin = "10px";
+        btn.style.padding = "12px 20px";
+        btn.style.fontSize = "16px";
+        btn.style.cursor = "pointer";
+        btn.style.border = "1px solid #009688";
+        btn.style.borderRadius = "8px";
+        btn.style.backgroundColor = "#e0f2f1";
+        btn.style.color = "#004d40";
+        btn.style.transition = "all 0.3s ease";
+        btn.onmouseover = () => btn.style.backgroundColor = "#b2dfdb";
+        btn.onmouseout = () => btn.style.backgroundColor = "#e0f2f1";
+        btn.onclick = () => checkAnswer(opt);
+        document.getElementById("options").appendChild(btn);
+      });
+
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("next-btn").style.display = "none";
+    }
+
+    function checkAnswer(selected) {
+      const correct = questions[currentQuestionIndex].answer;
+      const feedback = document.getElementById("feedback");
+      if (selected === correct) {
+        feedback.textContent = "✅ Correct!";
+        feedback.style.color = "green";
+        score++;
+      } else {
+        feedback.textContent = `❌ Wrong! Correct answer is: ${correct}`;
+        feedback.style.color = "red";
+      }
+
+      Array.from(document.getElementById("options").children).forEach(btn => {
+        btn.disabled = true;
+        btn.style.cursor = "default";
+        btn.style.opacity = "0.6";
+      });
+
+      document.getElementById("next-btn").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz-container").innerHTML = `
+          <h2 style="color: #00796b;">🎉 Quiz Completed!</h2>
+          <p style="font-size: 20px; font-weight: bold; color: #004d40;">Your Score: ${score} / ${questions.length}</p>
+          <p style="color: #555;">Refresh the page to try again.</p>
+        `;
+      }
+    }
+
+    // Start the quiz
+    loadQuestion();
+  </script>
+
+</body>
+</html>
